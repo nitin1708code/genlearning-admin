@@ -17,7 +17,7 @@ const Login = () => {
 
     try {
       const response = await fetch(
-        "http://localhost:5001/api/admin/auth/login",
+        "https://admin.genlearning.in/api/admin/auth/login",
         {
           method: "POST",
           headers: {
