@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-const API_URL = "https://admin.genlearning.in";
+const API_URL = "https://api.genlearning.in";
 
 const Dashboard = () => {
   // ========================================
