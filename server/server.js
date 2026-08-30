@@ -79,6 +79,16 @@ app.get("/api/db-test", async (req, res) => {
 });
  
 
+const frontendPath = path.join(__dirname, "../dist");
+
+app.use(express.static(frontendPath));
+
+app.get("*", (req, res) => {
+  if (!req.path.startsWith("/api/")) {
+    res.sendFile(path.join(frontendPath, "index.html"));
+  }
+});
+
 /* =========================
    SERVER
 ========================= */
