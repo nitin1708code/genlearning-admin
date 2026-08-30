@@ -14,34 +14,34 @@ const app = express();
 /* =========================
    CORS
 ========================= */
+/* =========================
+   CORS (Fixed Custom Version)
+========================= */
 
 app.use((req, res, next) => {
   const origin = req.headers.origin;
+  const allowedOrigins = [
+    "https://admin.genlearning.in",
+    "http://localhost:5173"
+  ];
 
-  console.log("REQUEST:", req.method, req.originalUrl);
-  console.log("ORIGIN:", origin);
-
-  if (
-    origin === "https://admin.genlearning.in" ||
-    origin === "http://localhost:5173"
-  ) {
+  if (allowedOrigins.includes(origin)) {
     res.setHeader("Access-Control-Allow-Origin", origin);
   }
 
   res.setHeader("Access-Control-Allow-Credentials", "true");
   res.setHeader(
     "Access-Control-Allow-Methods",
-    "GET,POST,PUT,PATCH,DELETE,OPTIONS"
+    "GET, POST, PUT, PATCH, DELETE, OPTIONS"
   );
   res.setHeader(
     "Access-Control-Allow-Headers",
     "Content-Type, Authorization"
   );
 
+  // Handle preflight directly
   if (req.method === "OPTIONS") {
-    console.log("CORS PREFLIGHT OK");
-
-    return res.status(204).end();
+    return res.sendStatus(204);
   }
 
   next();
