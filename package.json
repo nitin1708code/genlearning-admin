@@ -1,21 +1,29 @@
 {
   "name": "genlearning-admin",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "start": "node server/server.js",
     "lint": "eslint .",
     "preview": "vite preview"
   },
   "dependencies": {
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
-    "react-router-dom": "^7.18.2"
+    "react-router-dom": "^7.18.2",
+    "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mysql2": "^3.14.3",
+    "razorpay": "^2.9.8"
   },
   "devDependencies": {
-    "@eslint/js": "^10.0.1",
+    "@eslint/js": "^10.9.0",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",
     "@vitejs/plugin-react": "^6.1.0",

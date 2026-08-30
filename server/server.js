@@ -11,18 +11,18 @@ const dashboardRoutes = require("./routes/dashboardRoutes");
 
 const app = express();
 
+app.use(express.json());
+
 /* =========================
    CORS
-========================= */
-/* =========================
-   CORS (Fixed Custom Version)
 ========================= */
 
 app.use((req, res, next) => {
   const origin = req.headers.origin;
+
   const allowedOrigins = [
     "https://admin.genlearning.in",
-    "http://localhost:5173"
+    "http://localhost:5173",
   ];
 
   if (allowedOrigins.includes(origin)) {
@@ -39,7 +39,6 @@ app.use((req, res, next) => {
     "Content-Type, Authorization"
   );
 
-  // Handle preflight directly
   if (req.method === "OPTIONS") {
     return res.sendStatus(204);
   }
@@ -48,28 +47,11 @@ app.use((req, res, next) => {
 });
 
 /* =========================
-   JSON
-========================= */
-
-app.use(express.json());
-
-/* =========================
-   ROUTES
+   API ROUTES
 ========================= */
 
 app.use("/api/admin/auth", adminAuthRoutes);
 app.use("/api/admin/dashboard", dashboardRoutes);
-
-/* =========================
-   HEALTH CHECK
-========================= */
-
-app.get("/", (req, res) => {
-  res.json({
-    success: true,
-    message: "GenLearning Admin API is running",
-  });
-});
 
 /* =========================
    DB TEST
@@ -94,6 +76,29 @@ app.get("/api/db-test", async (req, res) => {
       message: "Admin database connection failed",
     });
   }
+});
+
+/* =========================
+   FRONTEND
+========================= */
+
+const frontendPath = path.join(__dirname, "../dist");
+
+app.use(express.static(frontendPath));
+
+/* React Router fallback */
+
+app.use((req, res, next) => {
+  if (
+    req.method === "GET" &&
+    !req.path.startsWith("/api/")
+  ) {
+    return res.sendFile(
+      path.join(frontendPath, "index.html")
+    );
+  }
+
+  next();
 });
 
 /* =========================
