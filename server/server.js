@@ -77,29 +77,7 @@ app.get("/api/db-test", async (req, res) => {
     });
   }
 });
-
-/* =========================
-   FRONTEND
-========================= */
-
-const frontendPath = path.join(__dirname, "../dist");
-
-app.use(express.static(frontendPath));
-
-/* React Router fallback */
-
-app.use((req, res, next) => {
-  if (
-    req.method === "GET" &&
-    !req.path.startsWith("/api/")
-  ) {
-    return res.sendFile(
-      path.join(frontendPath, "index.html")
-    );
-  }
-
-  next();
-});
+ 
 
 /* =========================
    SERVER
