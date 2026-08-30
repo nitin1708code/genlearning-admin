@@ -12,23 +12,29 @@ const dashboardRoutes = require("./routes/dashboardRoutes");
 
 const app = express();
 
-app.use(
-  cors({
-    origin: [
-      "http://localhost:5173",
-      "https://admin.genlearning.in",
-    ],
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
-);
+const corsOptions = {
+  origin: [
+    "http://localhost:5173",
+    "https://admin.genlearning.in",
+  ],
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+
+// CORS
+app.use(cors(corsOptions));
+
+// Explicit preflight handling
+app.options(/.*/, cors(corsOptions));
 
 app.use(express.json());
 
+// Routes
 app.use("/api/admin/auth", adminAuthRoutes);
 app.use("/api/admin/dashboard", dashboardRoutes);
 
+// Health check
 app.get("/", (req, res) => {
   res.json({
     success: true,
@@ -36,9 +42,12 @@ app.get("/", (req, res) => {
   });
 });
 
+// DB test
 app.get("/api/db-test", async (req, res) => {
   try {
-    const [rows] = await db.query("SELECT 1 AS connected");
+    const [rows] = await db.query(
+      "SELECT 1 AS connected"
+    );
 
     res.json({
       success: true,
