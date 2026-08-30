@@ -1,6 +1,5 @@
 const express = require("express");
 const cors = require("cors");
-
 const path = require("path");
 
 require("dotenv").config({
@@ -10,21 +9,49 @@ require("dotenv").config({
 const db = require("./config/db");
 const adminAuthRoutes = require("./routes/adminAuthRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
+
 const app = express();
+
+
+// ========================================
+// CORS
+// ========================================
 
 app.use(
   cors({
     origin: [
-  "http://localhost:5173",
-  "https://admin.genlearning.in",
-  ],
+      "http://localhost:5173",
+      "https://admin.genlearning.in",
+    ],
     credentials: true,
   })
 );
 
+
+// ========================================
+// MIDDLEWARE
+// ========================================
+
 app.use(express.json());
+
+
+// ========================================
+// ADMIN AUTH ROUTES
+// ========================================
+
 app.use("/api/admin/auth", adminAuthRoutes);
+
+
+// ========================================
+// ADMIN DASHBOARD ROUTES
+// ========================================
+
 app.use("/api/admin/dashboard", dashboardRoutes);
+
+
+// ========================================
+// ROOT TEST
+// ========================================
 
 app.get("/", (req, res) => {
   res.json({
@@ -32,6 +59,11 @@ app.get("/", (req, res) => {
     message: "GenLearning Admin API is running",
   });
 });
+
+
+// ========================================
+// DATABASE TEST
+// ========================================
 
 app.get("/api/db-test", async (req, res) => {
   try {
@@ -44,6 +76,7 @@ app.get("/api/db-test", async (req, res) => {
       message: "Admin database connected successfully",
       data: rows,
     });
+
   } catch (error) {
     console.error("Admin database error:", error);
 
@@ -54,8 +87,15 @@ app.get("/api/db-test", async (req, res) => {
   }
 });
 
+
+// ========================================
+// PORT
+// ========================================
+
 const PORT = process.env.PORT || 5001;
 
 app.listen(PORT, "0.0.0.0", () => {
-  console.log(`GenLearning Admin Server running on port ${PORT}`);
+  console.log(
+    `GenLearning Admin Server running on port ${PORT}`
+  );
 });
