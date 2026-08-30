@@ -17,7 +17,7 @@ const Login = () => {
 
     try {
       const response = await fetch(
-        "https://api.genlearning.in/api/admin/auth/login",
+        "https://genlearning-admin-production.up.railway.app/api/admin/auth/login",
         {
           method: "POST",
           headers: {

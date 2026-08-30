@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-const API_URL = "https://api.genlearning.in";
+const API_URL = "https://genlearning-admin-production.up.railway.app";
 
 const Dashboard = () => {
   // ========================================
