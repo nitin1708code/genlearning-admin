@@ -1,5 +1,4 @@
 const express = require("express");
-const cors = require("cors");
 const path = require("path");
 
 require("dotenv").config({
@@ -12,29 +11,59 @@ const dashboardRoutes = require("./routes/dashboardRoutes");
 
 const app = express();
 
-const corsOptions = {
-  origin: [
-    "http://localhost:5173",
-    "https://admin.genlearning.in",
-  ],
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-};
+/* =========================
+   CORS
+========================= */
 
-// CORS
-app.use(cors(corsOptions));
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
 
-// Explicit preflight handling
-app.options(/.*/, cors(corsOptions));
+  console.log("REQUEST:", req.method, req.originalUrl);
+  console.log("ORIGIN:", origin);
+
+  if (
+    origin === "https://admin.genlearning.in" ||
+    origin === "http://localhost:5173"
+  ) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+  }
+
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET,POST,PUT,PATCH,DELETE,OPTIONS"
+  );
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Content-Type, Authorization"
+  );
+
+  if (req.method === "OPTIONS") {
+    console.log("CORS PREFLIGHT OK");
+
+    return res.status(204).end();
+  }
+
+  next();
+});
+
+/* =========================
+   JSON
+========================= */
 
 app.use(express.json());
 
-// Routes
+/* =========================
+   ROUTES
+========================= */
+
 app.use("/api/admin/auth", adminAuthRoutes);
 app.use("/api/admin/dashboard", dashboardRoutes);
 
-// Health check
+/* =========================
+   HEALTH CHECK
+========================= */
+
 app.get("/", (req, res) => {
   res.json({
     success: true,
@@ -42,7 +71,10 @@ app.get("/", (req, res) => {
   });
 });
 
-// DB test
+/* =========================
+   DB TEST
+========================= */
+
 app.get("/api/db-test", async (req, res) => {
   try {
     const [rows] = await db.query(
@@ -64,8 +96,14 @@ app.get("/api/db-test", async (req, res) => {
   }
 });
 
+/* =========================
+   SERVER
+========================= */
+
 const PORT = process.env.PORT || 5001;
 
 app.listen(PORT, "0.0.0.0", () => {
-  console.log(`GenLearning Admin Server running on port ${PORT}`);
+  console.log(
+    `GenLearning Admin Server running on port ${PORT}`
+  );
 });
