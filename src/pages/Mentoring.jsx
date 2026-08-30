@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-const API_URL = "https://admin.genlearning.in";
+const API_URL = "https://genlearning-admin.onrender.com";
 
 const Mentoring = () => {
   const [bookings, setBookings] = useState([]);
